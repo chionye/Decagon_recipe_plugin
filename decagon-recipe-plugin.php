@@ -85,7 +85,7 @@ function getAllRecords()
 				<td width='25%'>$print->name</td>
 				<td width='25%'>$print->ingredients</td>
 				<td width='25%'>$print->recipe</td>
-				<td width='25%'><a href='#'>Edit</a></td>
+				<td width='25%'><a href='admin.php?page=Recipe&id=$print->id'>Edit</a></td>
 				<td width='25%'><a href='#'>Delete</a></td>
 			</tr>
 			</form>
@@ -95,4 +95,9 @@ function getAllRecords()
 	?>
 </div>
 <?php 
+}
+
+function getAddRecords()
+{
+    
 }
