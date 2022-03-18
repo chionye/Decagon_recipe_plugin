@@ -33,11 +33,12 @@ defined( 'ABSPATH' ) or die();
 
 register_activation_hook( __FILE__, 'crudOperationsTable');
 
+$tableName = $wpdb->prefix . 'recipe';
+
 // create recipe table
 function crudOperationsTable() {
-  global $wpdb;
+  global $wpdb, $tableName;
   $charsetCollate = $wpdb->get_charset_collate();
-  $tableName = $wpdb->prefix . 'recipe';
   $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `recipe_name` varchar(255) DEFAULT NULL,
@@ -64,8 +65,7 @@ function addAdminPages() {
 // get all recipes
 function getAllRecords()
 {
-	global $wpdb;
-	$tableName = $wpdb->prefix . 'recipe';
+	global $wpdb, $tableName;
 	$i = 1;
 	
 	if ($_GET['page'] == "Recipe" && isset($_GET['del'])) {
@@ -116,9 +116,8 @@ function getAllRecords()
 // add a new recipe
 function getAddRecords()
 {
+	global $wpdb, $tableName;
 	if (isset($_POST['newrecipe'])) {
-		global $wpdb;
-		$tableName = $wpdb->prefix . 'recipe';
 		$name = $_POST['name'];
 		$ingredients = $_POST['ingredients'];
 		$recipe = $_POST['recipe'];
@@ -160,10 +159,8 @@ function getAddRecords()
 // edit a recipe
 function getEditRecords()
 {
-	global $wpdb;
-	$tableName = $wpdb->prefix . 'recipe';
+	global $wpdb, $tableName;
 	if (isset($_POST['editrecipe'])) {
-		
 		$name = $_POST['name'];
 		$ingredients = $_POST['ingredients'];
 		$recipe = $_POST['recipe'];
