@@ -50,3 +50,13 @@ function createTable() {
   }
 }
 
+add_action('admin_menu', 'addAdminMenu');
+
+function addAdminMenu() {
+    // menu items
+    add_menu_page('Recipes', 'Recipes', 'manage_options', 'Recipe', '', 'dashicons-community');
+    add_submenu_page( 'Recipe', 'All Recipes', 'All Recipes',
+        'manage_options', 'Recipe', 'getAllRecords');
+    add_submenu_page( 'Recipe', 'Edit Recipe', 'Edit Recipe',
+        'manage_options', 'Recipe', 'editRecipe');
+}
