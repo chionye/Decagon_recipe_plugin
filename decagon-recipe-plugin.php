@@ -29,3 +29,24 @@ Copyright 2005-2015 Automattic, Inc
 */
 
 defined( 'ABSPATH' ) or die();
+
+register_activation_hook( __FILE__, 'createTable');
+
+function createTable() {
+  global $wpdb;
+  $charsetCollate = $wpdb->get_charset_collate();
+  $tableName = $wpdb->prefix . 'recipe';
+  $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text DEFAULT NULL,
+  `ingredients` text DEFAULT NULL,
+  `recipe` text DEFAULT NULL,
+  PRIMARY KEY(id)
+  ) $charsetCollate";
+
+  if ($wpdb->get_var("SHOW TABLES LIKE '$tableName'") != $tableName) {
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+  }
+}
+
