@@ -30,72 +30,30 @@ Copyright 2005-2015 Automattic, Inc
 
 defined( 'ABSPATH' ) or die();
 
-register_activation_hook( __FILE__, 'createTable');
 
-$tableName = $wpdb->prefix . 'recipe';
-
-function createTable() {
-  global $wpdb, $tableName;
+register_activation_hook( __FILE__, 'crudOperationsTable');
+function crudOperationsTable() {
+  global $wpdb;
   $charsetCollate = $wpdb->get_charset_collate();
-  
+  $tableName = $wpdb->prefix . 'recipe';
   $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `ingredients` text DEFAULT NULL,
   `recipe` text DEFAULT NULL,
   PRIMARY KEY(id)
-  ) $charsetCollate";
-
+  ) $charsetCollate;";
   if ($wpdb->get_var("SHOW TABLES LIKE '$tableName'") != $tableName) {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
   }
 }
 
-add_action('admin_menu', 'addAdminMenu');
-
-function addAdminMenu() {
-    // menu items
-    add_menu_page('Recipes', 'Recipes', 'manage_options', 'Recipe', '', 'dashicons-community');
+add_action('admin_menu', 'addAdminPages');
+function addAdminPages() {
+    add_menu_page('Recipes', 'Recipes', 'manage_options', 'Recipe', '', 'dashicons-buddicons-community');
     add_submenu_page( 'Recipe', 'All Recipes', 'All Recipes',
         'manage_options', 'Recipe', 'getAllRecords');
-    add_submenu_page( 'Recipe', 'Edit Recipe', 'Edit Recipe',
-        'manage_options', 'Recipe', 'editRecipe');
-}
-
-function getAllRecords()
-	{
-		global $wpdb, $tableName;
-		$i = 1;
-		$result = $wpdb->get_results("SELECT * FROM $tableName");
-		foreach($result as $print) {
-		echo "
-		<table class='wp-list-table widefat striped'>
-		<thead>
-			<tr>
-			<th width='25%'>No</th>
-			<th width='25%'>Name</th>
-			<th width='25%'>Ingredients</th>
-			<th width='25%'>Recipe</th>
-			<th width='25%'>Edit</th>
-			<th width='25%'>Delete</th>
-			</tr>
-		</thead>
-		<tbody>
-			<form action='' method='post'>
-			<tr>
-				<td width='25%'>$i++</td>
-				<td width='25%'>$print->name</td>
-				<td width='25%'>$print->ingredients</td>
-				<td width='25%'>$print->recipe</td>
-				<td width='25%'><a href='admin.php?page=crud.php'>Edit</a></td>
-				<td width='25%'><a href='admin.php?page=crud.php'>Delete</a></td>
-			</tr>
-			</form>
-		</tbody>
-		</table>";
-		}
-	?>
-</div>
-<?php 
+        add_submenu_page( 'Recipe', 'Add Recipes', 'Add Recipes',
+        'manage_options', 'Recipe', 'getAddRecords');
 }
