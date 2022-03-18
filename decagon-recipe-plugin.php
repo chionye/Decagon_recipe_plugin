@@ -50,10 +50,49 @@ function crudOperationsTable() {
 }
 
 add_action('admin_menu', 'addAdminPages');
+
 function addAdminPages() {
     add_menu_page('Recipes', 'Recipes', 'manage_options', 'Recipe', '', 'dashicons-buddicons-community');
     add_submenu_page( 'Recipe', 'All Recipes', 'All Recipes',
         'manage_options', 'Recipe', 'getAllRecords');
         add_submenu_page( 'Recipe', 'Add Recipes', 'Add Recipes',
         'manage_options', 'Recipe', 'getAddRecords');
+}
+
+function getAllRecords()
+	{
+		global $wpdb;
+        $tableName = $wpdb->prefix . 'recipe';
+		$i = 1;
+		$result = $wpdb->get_results("SELECT * FROM $tableName");
+		foreach($result as $print) {
+		echo "
+		<table class='wp-list-table widefat striped'>
+		<thead>
+			<tr>
+			<th width='25%'>No</th>
+			<th width='25%'>Name</th>
+			<th width='25%'>Ingredients</th>
+			<th width='25%'>Recipe</th>
+			<th width='25%'>Edit</th>
+			<th width='25%'>Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<form action='' method='post'>
+			<tr>
+				<td width='25%'>$i++</td>
+				<td width='25%'>$print->name</td>
+				<td width='25%'>$print->ingredients</td>
+				<td width='25%'>$print->recipe</td>
+				<td width='25%'><a href='#'>Edit</a></td>
+				<td width='25%'><a href='#'>Delete</a></td>
+			</tr>
+			</form>
+		</tbody>
+		</table>";
+		}
+	?>
+</div>
+<?php 
 }
