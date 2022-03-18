@@ -32,10 +32,12 @@ defined( 'ABSPATH' ) or die();
 
 register_activation_hook( __FILE__, 'createTable');
 
+$tableName = $wpdb->prefix . 'recipe';
+
 function createTable() {
-  global $wpdb;
+  global $wpdb, $tableName;
   $charsetCollate = $wpdb->get_charset_collate();
-  $tableName = $wpdb->prefix . 'recipe';
+  
   $sql = "CREATE TABLE IF NOT EXISTS `$tableName` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` text DEFAULT NULL,
@@ -59,4 +61,41 @@ function addAdminMenu() {
         'manage_options', 'Recipe', 'getAllRecords');
     add_submenu_page( 'Recipe', 'Edit Recipe', 'Edit Recipe',
         'manage_options', 'Recipe', 'editRecipe');
+}
+
+function getAllRecords()
+	{
+		global $wpdb, $tableName;
+		$i = 1;
+		$result = $wpdb->get_results("SELECT * FROM $tableName");
+		foreach($result as $print) {
+		echo "
+		<table class='wp-list-table widefat striped'>
+		<thead>
+			<tr>
+			<th width='25%'>No</th>
+			<th width='25%'>Name</th>
+			<th width='25%'>Ingredients</th>
+			<th width='25%'>Recipe</th>
+			<th width='25%'>Edit</th>
+			<th width='25%'>Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			<form action='' method='post'>
+			<tr>
+				<td width='25%'>$i++</td>
+				<td width='25%'>$print->name</td>
+				<td width='25%'>$print->ingredients</td>
+				<td width='25%'>$print->recipe</td>
+				<td width='25%'><a href='admin.php?page=crud.php'>Edit</a></td>
+				<td width='25%'><a href='admin.php?page=crud.php'>Delete</a></td>
+			</tr>
+			</form>
+		</tbody>
+		</table>";
+		}
+	?>
+</div>
+<?php 
 }
